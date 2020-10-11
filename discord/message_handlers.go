@@ -11,7 +11,7 @@ import (
 	"github.com/bwmarrin/discordgo"
 )
 
-const downloadURL = "https://github.com/mariusangelmann/amonguscapture-deutsch/releases/latest/download/amonguscapture-x32.exe"
+const downloadURL = "https://github.com/denverquane/amongusdiscord/releases/latest/download/amonguscapture-x32.exe"
 const dotNetUrl = "https://dotnet.microsoft.com/download/dotnet-core/thank-you/sdk-3.1.402-windows-x86-installer"
 
 func (bot *Bot) handleGameEndMessage(guild *GuildState, s *discordgo.Session) {
@@ -139,7 +139,7 @@ func (bot *Bot) handleNewGameMessage(guild *GuildState, s *discordgo.Session, m 
 						log.Printf("Benutzer, der neu eingegeben hat, befindet sich im Sprachkanal \"%s\". Verwende diesen für die Erfassung", channel.Name)
 					}
 				}
-				
+
 			}
 
 		}
