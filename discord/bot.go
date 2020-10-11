@@ -348,7 +348,7 @@ func (bot *Bot) socketioServer(port string) {
 		}
 	})
 	server.OnError("/", func(s socketio.Conn, e error) {
-		log.Println("Fehler treffen:", e)
+		log.Println("Fehler:", e)
 	})
 	server.OnDisconnect("/", func(s socketio.Conn, reason string) {
 		log.Println("Client-Verbindung geschlossen: ", reason)

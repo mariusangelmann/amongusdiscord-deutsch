@@ -11,7 +11,7 @@ import (
 	"github.com/bwmarrin/discordgo"
 )
 
-const downloadURL = "https://github.com/denverquane/amonguscapture/releases/latest/download/amonguscapture-x32.exe"
+const downloadURL = "https://github.com/mariusangelmann/amonguscapture-deutsch/releases/latest/download/amonguscapture-x32.exe"
 const dotNetUrl = "https://dotnet.microsoft.com/download/dotnet-core/thank-you/sdk-3.1.402-windows-x86-installer"
 
 func (bot *Bot) handleGameEndMessage(guild *GuildState, s *discordgo.Session) {
@@ -83,8 +83,8 @@ func (bot *Bot) handleNewGameMessage(guild *GuildState, s *discordgo.Session, m 
 		URL:   "",
 		Type:  "",
 		Title: "Du hast gerade ein Spiel gestartet!",
-		Description: fmt.Sprintf("Klicken Sie auf den folgenden Link, um die Aufnahme zu verknüpfen: \n <%s>\n\n"+
-			"Haben Sie die Aufnahme nicht installiert? [Lade es hier herunter](%s)\nWenn du .NET Core nicht installiert hast, kannst du dies [hier] erhalten.(%s)\n\nAufnahme manuell verknüpfen:", hyperlink, downloadURL, dotNetUrl),
+		Description: fmt.Sprintf("Klicke auf den folgenden Link, um die Aufnahme zu verknüpfen: \n <%s>\n\n"+
+			"Du hast die Aufnahme nicht installiert? [Lade es hier herunter](%s)\nWenn du .NET Core nicht installiert hast, kannst du dies [hier](%s) erhalten.\n\nAufnahme manuell verknüpfen:", hyperlink, downloadURL, dotNetUrl),
 		Timestamp: "",
 		Color:     3066993, //GREEN
 		Image:     nil,

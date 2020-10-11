@@ -15,7 +15,7 @@ import (
 func helpResponse(version, CommandPrefix string) string {
 	buf := bytes.NewBuffer([]byte{})
 	buf.WriteString(fmt.Sprintf("Among Us Bot Commands (v%s):\n", version))
-	buf.WriteString("Haben Sie Probleme oder Vorschläge? Trete dem Discord-Server des originalen Entwickers bei (Englisch) <https://discord.gg/ZkqZSWF>!\n")
+	buf.WriteString("Hast du Probleme oder Vorschläge? Trete dem Discord-Server des originalen Entwickers bei (Englisch) <https://discord.gg/ZkqZSWF>!\n")
 	buf.WriteString(fmt.Sprintf("`%s help` oder `%s h`: Hilfeinformationen und Befehlsverwendung anzeigen.\n", CommandPrefix, CommandPrefix))
 	buf.WriteString(fmt.Sprintf("`%s new` oder `%s n`: Starten Sie das Spiel in diesem Textkanal. Akzeptiert Raumcode und Region als Argumente. z.B.: `%s new CODE eu`. Funktioniert auch zum Neustart.\n", CommandPrefix, CommandPrefix, CommandPrefix))
 	buf.WriteString(fmt.Sprintf("`%s refresh` oder `%s r`: Erstelle die Statusmeldung des Bots vollständig neu, falls sie zu weit oben im Chat landet.\n", CommandPrefix, CommandPrefix))
@@ -144,13 +144,13 @@ func menuMessage(g *GuildState) *discordgo.MessageEmbed {
 		desc = g.makeDescription()
 		color = 3066993
 	} else {
-		desc = fmt.Sprintf("%s**Kein Capture verlinkt! Klicke auf den Link in den DMs, um eine Verbindung herzustellen!**%s", alarmFormatted, alarmFormatted)
+		desc = fmt.Sprintf("%s**Kein Capture verbunden! Klicke auf den Link in den DMs, um eine Verbindung herzustellen!**%s", alarmFormatted, alarmFormatted)
 	}
 
 	msg := discordgo.MessageEmbed{
 		URL:         "",
 		Type:        "",
-		Title:       "Main Menu",
+		Title:       "Hauptmenü",
 		Description: desc,
 		Timestamp:   "",
 		Footer:      nil,
@@ -187,7 +187,7 @@ func lobbyMessage(g *GuildState) *discordgo.MessageEmbed {
 		desc = g.makeDescription()
 		color = 3066993
 	} else {
-		desc = fmt.Sprintf("%s**Kein Capture verlinkt! Klicke auf den Link in den DMs, um eine Verbindung herzustellen!**%s", alarmFormatted, alarmFormatted)
+		desc = fmt.Sprintf("%s**Kein Capture verbunden! Klicke auf den Link in den DMs, um eine Verbindung herzustellen!**%s", alarmFormatted, alarmFormatted)
 	}
 
 	msg := discordgo.MessageEmbed{
