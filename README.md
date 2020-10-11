@@ -22,6 +22,6 @@ Funktioniert in Verbindung mit [amonguscapture](https://github.com/denverquane/a
 
 **Dieses Programm ist in der Beta. Obwohl wir von der Grundfunktionalität überzeugt sind, wird es dennoch Probleme oder Besonderheiten bei der Funktionsweise des Programms geben! Wir arbeiten aktiv daran, diese Probleme zu lösen!**
 
-#Installation, Hilfe usw.
+# Installation, Hilfe usw.
 
 **Für weitere Informationen wie z.B. der Installation oder Support, bitte [Main Repository](https://github.com/denverquane/amongusdiscord) besuchen!**
