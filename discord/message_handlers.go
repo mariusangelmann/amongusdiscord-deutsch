@@ -82,9 +82,9 @@ func (bot *Bot) handleNewGameMessage(guild *GuildState, s *discordgo.Session, m 
 	var embed = discordgo.MessageEmbed{
 		URL:   "",
 		Type:  "",
-		Title: "You just started a game!",
-		Description: fmt.Sprintf("Click the following link to link your capture: \n <%s>\n\n"+
-			"Don't have the capture installed? [Download it here](%s)\nIf you don't have .NET Core installed, you can get that [here](%s)\n\nTo link your capture manually:", hyperlink, downloadURL, dotNetUrl),
+		Title: "Du hast gerade ein Spiel gestartet!",
+		Description: fmt.Sprintf("Klicken Sie auf den folgenden Link, um die Aufnahme zu verknüpfen: \n <%s>\n\n"+
+			"Haben Sie die Aufnahme nicht installiert? [Lade es hier herunter](%s)\nWenn du .NET Core nicht installiert hast, kannst du dies [hier] erhalten.(%s)\n\nAufnahme manuell verknüpfen:", hyperlink, downloadURL, dotNetUrl),
 		Timestamp: "",
 		Color:     3066993, //GREEN
 		Image:     nil,
@@ -121,7 +121,7 @@ func (bot *Bot) handleNewGameMessage(guild *GuildState, s *discordgo.Session, m 
 					channelName: channel.Name,
 					forGhosts:   false,
 				})
-				log.Printf("Found initial default channel specified in config: ID %s, Name %s\n", channel.ID, channel.Name)
+				log.Printf("Der in der Konfiguration angegebene anfängliche Standardkanal wurde gefunden: ID %s, Name %s\n", channel.ID, channel.Name)
 			}
 		}
 		for _, v := range g.VoiceStates {
@@ -136,10 +136,10 @@ func (bot *Bot) handleNewGameMessage(guild *GuildState, s *discordgo.Session, m 
 							channelName: channel.Name,
 							forGhosts:   false,
 						})
-						log.Printf("User that typed new is in the \"%s\" voice channel; using that for tracking", channel.Name)
+						log.Printf("Benutzer, der neu eingegeben hat, befindet sich im Sprachkanal \"%s\". Verwende diesen für die Erfassung", channel.Name)
 					}
 				}
-
+				
 			}
 
 		}
@@ -168,7 +168,7 @@ func (guild *GuildState) handleGameStartMessage(s *discordgo.Session, m *discord
 
 	guild.GameStateMsg.CreateMessage(s, gameStateResponse(guild), m.ChannelID, m.Author.ID)
 
-	log.Println("Added self game state message")
+	log.Println("Selbstspielstatusmeldung hinzugefügt")
 
 	if guild.AmongUsData.GetPhase() != game.MENU {
 		for _, e := range guild.StatusEmojis[true] {

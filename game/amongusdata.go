@@ -17,7 +17,7 @@ type PlayerData struct {
 
 // ToString a user
 func (auData *PlayerData) ToString() string {
-	return fmt.Sprintf("{ Name: %s, Color: %s, Alive: %v }\n", auData.Name, GetColorStringForInt(auData.Color), auData.IsAlive)
+	return fmt.Sprintf("{ Name: %s, Farbe: %s, Am Leben: %v }\n", auData.Name, GetColorStringForInt(auData.Color), auData.IsAlive)
 }
 
 func (auData *PlayerData) isDifferent(player Player) bool {
@@ -107,7 +107,7 @@ func (auData *AmongUsData) ApplyPlayerUpdate(update Player) (bool, bool) {
 			Name:    update.Name,
 			IsAlive: !update.IsDead,
 		}
-		log.Printf("Added new player instance for %s\n", update.Name)
+		log.Printf("Neue Player-Instanz für %s hinzugefügt\n", update.Name)
 		return true, false
 	}
 	guildDataTempPtr := auData.playerData[update.Name]
@@ -117,7 +117,7 @@ func (auData *AmongUsData) ApplyPlayerUpdate(update Player) (bool, bool) {
 		(*auData.playerData[update.Name]).Color = update.Color
 		(*auData.playerData[update.Name]).Name = update.Name
 		(*auData.playerData[update.Name]).IsAlive = !update.IsDead
-		log.Printf("Updated %s", (*auData.playerData[update.Name]).ToString())
+		log.Printf("Aktualisiert %s", (*auData.playerData[update.Name]).ToString())
 	}
 
 	return isUpdate, isAliveUpdate

@@ -73,10 +73,10 @@ func (sm *SessionManager) GetSessionForRequest() *discordgo.Session {
 
 	sm.count++
 	if sm.count%2 == 0 {
-		log.Println("Using primary session for request")
+		log.Println("Primärsitzung für Anfrage verwenden")
 		return sm.PrimarySession
 	} else {
-		log.Println("Using secondary session for request")
+		log.Println("Verwenden der sekundären Sitzung zur Anforderung")
 		return sm.AltSession
 	}
 }
@@ -152,23 +152,23 @@ func MakeAndStartBot(version, token, token2, url, port, extPort, emojiGuildID st
 
 	dg, err := discordgo.New("Bot " + token)
 	if err != nil {
-		log.Println("error creating Discord session,", err)
+		log.Println("Fehler beim Erstellen der Discord-Sitzung,", err)
 		return nil
 	}
 	if token2 != "" {
 		altDiscordSession, err = discordgo.New("Bot " + token2)
 		if err != nil {
-			log.Println("error creating 2nd Discord session,", err)
+			log.Println("Fehler beim Erstellen der 2. Discord-Sitzung,", err)
 			return nil
 		}
 	}
 
 	if numShards > 1 {
-		log.Printf("Identifying to the Discord API with %d total shards, and shard ID=%d\n", numShards, shardID)
+		log.Printf("Identifizieren mit der Discord-API mit %d Gesamt-Shards und Shard-ID =%d\n", numShards, shardID)
 		dg.ShardCount = numShards
 		dg.ShardID = shardID
 		if altDiscordSession != nil {
-			log.Printf("Identifying to the Discord API for the 2nd Bot with %d total shards, and shard ID=%d\n", numShards, shardID)
+			log.Printf("Identifizieren der Discord-API für den 2. Bot mit %d Gesamt-Shards und Shard-ID =%d\n", numShards, shardID)
 			altDiscordSession.ShardCount = numShards
 			altDiscordSession.ShardID = shardID
 		}
@@ -203,7 +203,7 @@ func MakeAndStartBot(version, token, token2, url, port, extPort, emojiGuildID st
 	//Open a websocket connection to Discord and begin listening.
 	err = dg.Open()
 	if err != nil {
-		log.Println("Could not connect Bot to the Discord Servers with error:", err)
+		log.Println("Bot konnte mit Fehler nicht mit den Discord-Servern verbunden werden:", err)
 		return nil
 	}
 
@@ -212,7 +212,7 @@ func MakeAndStartBot(version, token, token2, url, port, extPort, emojiGuildID st
 		altDiscordSession.Identify.Intents = discordgo.MakeIntent(discordgo.IntentsGuilds)
 		err = altDiscordSession.Open()
 		if err != nil {
-			log.Println("Could not connect 2nd Bot to the Discord Servers with error:", err)
+			log.Println("Der 2. Bot konnte fehlerhaft nicht mit den Discord-Servern verbunden werden:", err)
 			return nil
 		}
 	}
@@ -255,14 +255,14 @@ func (bot *Bot) socketioServer(port string) {
 	}
 	server.OnConnect("/", func(s socketio.Conn) error {
 		s.SetContext("")
-		log.Println("connected:", s.ID())
+		log.Println("verbunden:", s.ID())
 		return nil
 	})
 	server.OnEvent("/", "connectCode", func(s socketio.Conn, msg string) {
-		log.Printf("Received connection code: \"%s\"", msg)
+		log.Printf("Verbindungscode erhalten: \"%s\"", msg)
 		guildID := bot.guildIDForCode(msg)
 		if guildID == "" {
-			log.Printf("No guild has the current connect code of %s\n", msg)
+			log.Printf("Keine Gilde hat den aktuellen Verbindungscode von %s\n", msg)
 			return
 		}
 		//only link the socket to guilds that we actually have a record of
@@ -276,7 +276,7 @@ func (bot *Bot) socketioServer(port string) {
 			})
 		}
 
-		log.Printf("Associated websocket id %s with guildID %s using code %s\n", s.ID(), guildID, msg)
+		log.Printf("Zugehörige Websocket-ID %s mit guildID %s unter Verwendung von Code %s\n", s.ID(), guildID, msg)
 		//s.Emit("reply", "set guildID successfully")
 	})
 	server.OnEvent("/", "lobby", func(s socketio.Conn, msg string) {
@@ -297,13 +297,13 @@ func (bot *Bot) socketioServer(port string) {
 
 			if guildID != "" {
 				if guild, ok := bot.AllGuilds[guildID]; ok { // Game is connected -> update its room code
-					log.Println("Received room code", msg, "for guild", guild.PersistentGuildData.GuildID, "from capture")
+					log.Println("Raumcode erhalten", msg, "für die Gilde", guild.PersistentGuildData.GuildID, "von der Erfassung")
 				} else {
 					bot.PushGuildSocketUpdate(guildID, SocketStatus{
 						GuildID:   guildID,
 						Connected: true,
 					})
-					log.Println("Associated lobby with existing game!")
+					log.Println("Assoziierte Lobby mit bestehendem Spiel!")
 				}
 				//we went to lobby, so set the phase. Also adds the initial reaction emojis
 				bot.PushGuildPhaseUpdate(guildID, game.LOBBY)
@@ -315,26 +315,26 @@ func (bot *Bot) socketioServer(port string) {
 					Lobby:   lobby,
 				})
 			} else {
-				log.Println("I don't have a record of any games with a lobby or connect code of " + lobby.LobbyCode)
+				log.Println("Ich habe keine Aufzeichnung von Spielen mit einer Lobby oder einem Verbindungscode von " + lobby.LobbyCode)
 			}
 		}
 	})
 	server.OnEvent("/", "state", func(s socketio.Conn, msg string) {
-		log.Println("phase received from capture: ", msg)
+		log.Println("Phase von der Erfassung erhalten: ", msg)
 		phase, err := strconv.Atoi(msg)
 		if err != nil {
 			log.Println(err)
 		} else {
 			if gid, ok := bot.AllConns[s.ID()]; ok && gid != "" {
-				log.Println("Pushing phase event to channel")
+				log.Println("Phasenereignis auf Kanal schieben")
 				bot.PushGuildPhaseUpdate(gid, game.Phase(phase))
 			} else {
-				log.Println("This websocket is not associated with any guilds")
+				log.Println("Dieser Websocket ist keiner Gilde zugeordnet")
 			}
 		}
 	})
 	server.OnEvent("/", "player", func(s socketio.Conn, msg string) {
-		log.Println("player received from capture: ", msg)
+		log.Println("Spieler von Capture erhalten: ", msg)
 		player := game.Player{}
 		err := json.Unmarshal([]byte(msg), &player)
 		if err != nil {
@@ -343,15 +343,15 @@ func (bot *Bot) socketioServer(port string) {
 			if gid, ok := bot.AllConns[s.ID()]; ok && gid != "" {
 				bot.PushGuildPlayerUpdate(gid, player)
 			} else {
-				log.Println("This websocket is not associated with any guilds")
+				log.Println("Dieser Websocket ist keiner Gilde zugeordnet")
 			}
 		}
 	})
 	server.OnError("/", func(s socketio.Conn, e error) {
-		log.Println("meet error:", e)
+		log.Println("Fehler treffen:", e)
 	})
 	server.OnDisconnect("/", func(s socketio.Conn, reason string) {
-		log.Println("Client connection closed: ", reason)
+		log.Println("Client-Verbindung geschlossen: ", reason)
 
 		previousGid := bot.AllConns[s.ID()]
 		delete(bot.AllConns, s.ID())
@@ -375,7 +375,7 @@ func (bot *Bot) socketioServer(port string) {
 					Connected: false,
 				})
 
-				log.Printf("Deassociated websocket id %s with guildID %s\n", s.ID(), gid)
+				log.Printf("Zugeordnete Websocket-ID %s mit guildID %s\n", s.ID(), gid)
 			}
 		}
 	})
@@ -416,7 +416,7 @@ func (bot *Bot) updatesListener() func(dg *discordgo.Session, guildID string, so
 
 			case phase := <-*phaseUpdates:
 
-				log.Printf("Received PhaseUpdate message for guild %s\n", guildID)
+				log.Printf("PhaseUpdate-Nachricht für die Gilde erhalten %s\n", guildID)
 				if guild, ok := bot.AllGuilds[guildID]; ok {
 					if !guild.GameRunning {
 						//completely ignore events if the game is ended/paused
@@ -427,7 +427,7 @@ func (bot *Bot) updatesListener() func(dg *discordgo.Session, guildID string, so
 						if guild.AmongUsData.GetPhase() == game.MENU {
 							break
 						}
-						log.Println("Detected transition to Menu")
+						log.Println("Übergang zum Menü erkannt")
 						guild.AmongUsData.SetRoomRegion("Unprovided", "Unprovided")
 						guild.AmongUsData.SetPhase(phase)
 						guild.GameStateMsg.Edit(dg, gameStateResponse(guild))
@@ -437,7 +437,7 @@ func (bot *Bot) updatesListener() func(dg *discordgo.Session, guildID string, so
 						if guild.AmongUsData.GetPhase() == game.LOBBY {
 							break
 						}
-						log.Println("Detected transition to Lobby")
+						log.Println("Übergang zur Lobby festgestellt")
 
 						delay := guild.PersistentGuildData.Delays.GetDelay(guild.AmongUsData.GetPhase(), game.LOBBY)
 
@@ -455,7 +455,7 @@ func (bot *Bot) updatesListener() func(dg *discordgo.Session, guildID string, so
 						if guild.AmongUsData.GetPhase() == game.TASKS {
 							break
 						}
-						log.Println("Detected transition to Tasks")
+						log.Println("Übergang zu Aufgaben erkannt")
 						oldPhase := guild.AmongUsData.GetPhase()
 						delay := guild.PersistentGuildData.Delays.GetDelay(oldPhase, game.TASKS)
 						//when going from discussion to tasks, we should mute alive players FIRST
@@ -477,7 +477,7 @@ func (bot *Bot) updatesListener() func(dg *discordgo.Session, guildID string, so
 						if guild.AmongUsData.GetPhase() == game.DISCUSS {
 							break
 						}
-						log.Println("Detected transition to Discussion")
+						log.Println("Übergang zur Diskussion festgestellt")
 
 						delay := guild.PersistentGuildData.Delays.GetDelay(guild.AmongUsData.GetPhase(), game.DISCUSS)
 
@@ -488,12 +488,12 @@ func (bot *Bot) updatesListener() func(dg *discordgo.Session, guildID string, so
 						guild.GameStateMsg.Edit(dg, gameStateResponse(guild))
 						break
 					default:
-						log.Printf("Undetected new state: %d\n", phase)
+						log.Printf("Unentdeckter neuer Zustand: %d\n", phase)
 					}
 				}
 
 			case player := <-*playerUpdates:
-				log.Printf("Received PlayerUpdate message for guild %s\n", guildID)
+				log.Printf("PlayerUpdate-Nachricht für Gilde erhalten %s\n", guildID)
 				if guild, ok := bot.AllGuilds[guildID]; ok {
 					if !guild.GameRunning {
 						break
@@ -503,17 +503,17 @@ func (bot *Bot) updatesListener() func(dg *discordgo.Session, guildID string, so
 					//	(player's associations to amongus data are just pointers to these structs)
 					if player.Name != "" {
 						if player.Action == game.EXILED {
-							log.Println("Detected player EXILE event, marking as dead")
+							log.Println("Erkanntes Spieler-EXILE-Ereignis, als tot markiert")
 							player.IsDead = true
 						}
 						if player.IsDead == true && guild.AmongUsData.GetPhase() == game.LOBBY {
-							log.Println("Received a dead event, but we're in the Lobby, so I'm ignoring it")
+							log.Println("Ich habe ein totes Ereignis erhalten, aber wir sind in der Lobby, also ignoriere ich es")
 							player.IsDead = false
 						}
 
 						if player.Disconnected || player.Action == game.LEFT {
-							log.Println("I detected that " + player.Name + " disconnected or left! " +
-								"I'm removing their linked game data; they will need to relink")
+							log.Println("Ich habe entdeckt, dass " + player.Name + " die Verbindung getrennt hat oder verlassen hat! " +
+								"Ich entferne die verknüpften Spieldaten. Sie müssen neu verknüpfen")
 
 							guild.UserData.ClearPlayerDataByPlayerName(player.Name)
 							guild.AmongUsData.ClearPlayerData(player.Name)
@@ -522,10 +522,10 @@ func (bot *Bot) updatesListener() func(dg *discordgo.Session, guildID string, so
 							updated, isAliveUpdated := guild.AmongUsData.ApplyPlayerUpdate(player)
 
 							if player.Action == game.JOINED {
-								log.Println("Detected a player joined, refreshing user data mappings")
+								log.Println("Es wurde festgestellt, dass ein Spieler beigetreten ist und die Benutzerdatenzuordnungen aktualisiert wurden")
 								data := guild.AmongUsData.GetByName(player.Name)
 								if data == nil {
-									log.Println("No player data found for " + player.Name)
+									log.Println("Keine Spielerdaten gefunden für " + player.Name)
 								}
 
 								guild.UserData.UpdatePlayerMappingByName(player.Name, data)
@@ -535,7 +535,7 @@ func (bot *Bot) updatesListener() func(dg *discordgo.Session, guildID string, so
 								data := guild.AmongUsData.GetByName(player.Name)
 								paired := guild.UserData.AttemptPairingByMatchingNames(player.Name, data)
 								if paired {
-									log.Println("Successfully linked discord user to player using matching names!")
+									log.Println("Erfolgreich verknüpfter Discord-Benutzer mit übereinstimmenden Namen mit dem Spieler verbunden!")
 								}
 
 								//log.Println("Player update received caused an update in cached state")
@@ -545,7 +545,7 @@ func (bot *Bot) updatesListener() func(dg *discordgo.Session, guildID string, so
 										guild.handleTrackedMembers(&bot.SessionManager, 0, NoPriority)
 										guild.GameStateMsg.Edit(dg, gameStateResponse(guild))
 									} else {
-										log.Println("NOT updating the discord status message; would leak info")
+										log.Println("NICHT die Discord-Statusmeldung aktualisieren; würde Infos leaken")
 									}
 								} else {
 									guild.GameStateMsg.Edit(dg, gameStateResponse(guild))
@@ -568,7 +568,7 @@ func (bot *Bot) updatesListener() func(dg *discordgo.Session, guildID string, so
 			case worldUpdate := <-*globalUpdates:
 				if guild, ok := bot.AllGuilds[guildID]; ok {
 					if worldUpdate.Type == GRACEFUL_SHUTDOWN {
-						log.Printf("Received graceful shutdown message, shutting down in %d seconds", worldUpdate.Data)
+						log.Printf("Es wurde eine ordnungsgemäße Meldung zum Herunterfahren empfangen, in %d Sekunden wird heruntergefahren", worldUpdate.Data)
 
 						go bot.gracefulShutdownWorker(dg, guild, worldUpdate.Data)
 					}
@@ -587,7 +587,7 @@ func (bot *Bot) updatesListener() func(dg *discordgo.Session, guildID string, so
 
 func (bot *Bot) gracefulShutdownWorker(s *discordgo.Session, guild *GuildState, seconds int) {
 	if guild.GameStateMsg.message != nil {
-		sendMessage(s, guild.GameStateMsg.message.ChannelID, fmt.Sprintf("**I need to go offline to upgrade! Your game/lobby will be ended in %d seconds!**", seconds))
+		sendMessage(s, guild.GameStateMsg.message.ChannelID, fmt.Sprintf("**Ich muss offline gehen, um ein Upgrade durchzuführen! Euer Spiel/eure Lobby wird in %d Sekunden beendet!**", seconds))
 	}
 
 	time.Sleep(time.Duration(seconds) * time.Second)
@@ -639,14 +639,14 @@ func (bot *Bot) newGuild(emojiGuildID string) func(s *discordgo.Session, m *disc
 
 		data, err := bot.StorageInterface.GetGuildData(m.Guild.ID)
 		if err != nil {
-			log.Printf("Couldn't load guild data for %s from storageDriver; using default config instead\n", m.Guild.ID)
-			log.Printf("Exact error: %s", err)
+			log.Printf("Gilden-Daten für %s konnten nicht aus storageDriver geladen werden. Verwenden Sie stattdessen die Standardkonfiguration\n", m.Guild.ID)
+			log.Printf("Genauer Fehler: %s", err)
 		} else {
 			tempPgd, err := FromData(data)
 			if err != nil {
-				log.Printf("Couldn't marshal guild data for %s; using default config instead\n", m.Guild.ID)
+				log.Printf("Gilden-Daten für %s konnten nicht gemarshallt werden. Verwende stattdessen die Standardkonfiguration\n", m.Guild.ID)
 			} else {
-				log.Printf("Successfully loaded config from storagedriver for %s\n", m.Guild.ID)
+				log.Printf("Konfiguration von storagedriver für erfolgreich geladen für %s\n", m.Guild.ID)
 				pgd = tempPgd
 			}
 		}
@@ -654,18 +654,18 @@ func (bot *Bot) newGuild(emojiGuildID string) func(s *discordgo.Session, m *disc
 			pgd = PGDDefault(m.Guild.ID)
 			data, err := pgd.ToData()
 			if err != nil {
-				log.Printf("Error marshalling %s PGD to map(!): %s\n", m.Guild.ID, err)
+				log.Printf("Fehler beim Marshalling von %s PGD zur Zuordnung(!): %s\n", m.Guild.ID, err)
 			} else {
 				err := bot.StorageInterface.WriteGuildData(m.Guild.ID, data)
 				if err != nil {
-					log.Printf("Error writing %s PGD to storage interface: %s\n", m.Guild.ID, err)
+					log.Printf("Fehler beim Schreiben von %s PGD in die Speicherschnittstelle: %s\n", m.Guild.ID, err)
 				} else {
-					log.Printf("Successfully wrote %s PGD to Storage interface!", m.Guild.ID)
+					log.Printf("%s PGD wurde erfolgreich in die Speicherschnittstelle geschrieben!", m.Guild.ID)
 				}
 			}
 		}
 
-		log.Printf("Added to new Guild, id %s, name %s", m.Guild.ID, m.Guild.Name)
+		log.Printf("Zur neuen Gilde hinzugefügt, ID %s, Name %s", m.Guild.ID, m.Guild.Name)
 		bot.AllGuilds[m.ID] = &GuildState{
 			PersistentGuildData: pgd,
 
@@ -684,7 +684,7 @@ func (bot *Bot) newGuild(emojiGuildID string) func(s *discordgo.Session, m *disc
 		}
 
 		if emojiGuildID == "" {
-			log.Println("[This is not an error] No explicit guildID provided for emojis; using the current guild default")
+			log.Println("[Dies ist kein Fehler] Für Emojis wurde keine explizite Gilden-ID bereitgestellt. mit dem aktuellen Gildenstandard")
 			emojiGuildID = m.Guild.ID
 		}
 		allEmojis, err := s.GuildEmojis(emojiGuildID)
@@ -742,7 +742,7 @@ func (bot *Bot) handleMessageCreate(guild *GuildState, s *discordgo.Session, m *
 			perms = guild.HasAdminPermissions(m.Author.ID) || guild.HasRolePermissions(s, m.Author.ID)
 		}
 		if !perms && g.OwnerID != m.Author.ID {
-			s.ChannelMessageSend(m.ChannelID, "User does not have the required permissions to execute this command!")
+			s.ChannelMessageSend(m.ChannelID, "Der Benutzer verfügt nicht über die erforderlichen Berechtigungen, um diesen Befehl auszuführen!")
 		} else {
 			oldLen := len(contents)
 			contents = strings.Replace(contents, guild.PersistentGuildData.CommandPrefix+" ", "", 1)

@@ -15,16 +15,16 @@ import (
 func helpResponse(version, CommandPrefix string) string {
 	buf := bytes.NewBuffer([]byte{})
 	buf.WriteString(fmt.Sprintf("Among Us Bot Commands (v%s):\n", version))
-	buf.WriteString("Having issues or have suggestions? Join the discord at <https://discord.gg/ZkqZSWF>!\n")
-	buf.WriteString(fmt.Sprintf("`%s help` or `%s h`: Print help info and command usage.\n", CommandPrefix, CommandPrefix))
-	buf.WriteString(fmt.Sprintf("`%s new` or `%s n`: Start the game in this text channel. Accepts room code and region as arguments. Ex: `%s new CODE eu`. Also works for restarting.\n", CommandPrefix, CommandPrefix, CommandPrefix))
-	buf.WriteString(fmt.Sprintf("`%s refresh` or `%s r`: Remake the bot's status message entirely, in case it ends up too far up in the chat.\n", CommandPrefix, CommandPrefix))
-	buf.WriteString(fmt.Sprintf("`%s end` or `%s e`: End the game entirely, and stop tracking players. Unmutes all and resets state.\n", CommandPrefix, CommandPrefix))
-	buf.WriteString(fmt.Sprintf("`%s track` or `%s t`: Instruct bot to only use the provided voice channel for automute. Ex: `%s t <vc_name>`\n", CommandPrefix, CommandPrefix, CommandPrefix))
-	buf.WriteString(fmt.Sprintf("`%s link` or `%s l`: Manually link a player to their in-game name or color. Ex: `%s l @player cyan` or `%s l @player bob`\n", CommandPrefix, CommandPrefix, CommandPrefix, CommandPrefix))
-	buf.WriteString(fmt.Sprintf("`%s unlink` or `%s u`: Manually unlink a player. Ex: `%s u @player`\n", CommandPrefix, CommandPrefix, CommandPrefix))
-	buf.WriteString(fmt.Sprintf("`%s settings` or `%s s`: View and change settings for the bot, such as the command prefix or mute behavior\n", CommandPrefix, CommandPrefix))
-	buf.WriteString(fmt.Sprintf("`%s force` or `%s f`: Force a transition to a stage if you encounter a problem in the state. Ex: `%s f task` or `%s f d`(discuss)\n", CommandPrefix, CommandPrefix, CommandPrefix, CommandPrefix))
+	buf.WriteString("Haben Sie Probleme oder Vorschläge? Trete dem Discord-Server des originalen Entwickers bei (Englisch) <https://discord.gg/ZkqZSWF>!\n")
+	buf.WriteString(fmt.Sprintf("`%s help` oder `%s h`: Hilfeinformationen und Befehlsverwendung anzeigen.\n", CommandPrefix, CommandPrefix))
+	buf.WriteString(fmt.Sprintf("`%s new` oder `%s n`: Starten Sie das Spiel in diesem Textkanal. Akzeptiert Raumcode und Region als Argumente. z.B.: `%s new CODE eu`. Funktioniert auch zum Neustart.\n", CommandPrefix, CommandPrefix, CommandPrefix))
+	buf.WriteString(fmt.Sprintf("`%s refresh` oder `%s r`: Erstelle die Statusmeldung des Bots vollständig neu, falls sie zu weit oben im Chat landet.\n", CommandPrefix, CommandPrefix))
+	buf.WriteString(fmt.Sprintf("`%s end` oder `%s e`: Beende das Spiel vollständig und höre auf, Spieler zu verfolgen. Hebt die Stummschaltung auf und setzt den Status zurück.\n", CommandPrefix, CommandPrefix))
+	buf.WriteString(fmt.Sprintf("`%s track` oder `%s t`: Weise den Bot an, nur den bereitgestellten Sprachkanal für die Automatisierung zu verwenden. z.B.: `%s t <vc_name>`\n", CommandPrefix, CommandPrefix, CommandPrefix))
+	buf.WriteString(fmt.Sprintf("`%s link` oder `%s l`: Verknüpfe einen Spieler manuell mit seinem Namen oder seiner Farbe im Spiel. z.B.: `%s l @player cyan` oder `%s l @player bob`\n", CommandPrefix, CommandPrefix, CommandPrefix, CommandPrefix))
+	buf.WriteString(fmt.Sprintf("`%s unlink` oder `%s u`: Löse manuell die Verknüpfung eines Spielers. z.B.: `%s u @player`\n", CommandPrefix, CommandPrefix, CommandPrefix))
+	buf.WriteString(fmt.Sprintf("`%s settings` oder `%s s`: Anzeigen und Ändern von Einstellungen für den Bot, z.B. das Befehlspräfix oder das Stummschaltungsverhalten\n", CommandPrefix, CommandPrefix))
+	buf.WriteString(fmt.Sprintf("`%s force` oder `%s f`: Erzwinge einen Übergang zu einer Stufe, wenn der Status fehlerhaft ist. z.B.: `%s f task` or `%s f d`(discuss)\n", CommandPrefix, CommandPrefix, CommandPrefix, CommandPrefix))
 
 	return buf.String()
 }
@@ -35,11 +35,11 @@ func (guild *GuildState) trackChannelResponse(channelName string, allChannels []
 
 			guild.Tracking.AddTrackedChannel(c.ID, c.Name, forGhosts)
 
-			log.Println(fmt.Sprintf("Now tracking \"%s\" Voice Channel for Automute (for ghosts? %v)!", c.Name, forGhosts))
-			return fmt.Sprintf("Now tracking \"%s\" Voice Channel for Automute (for ghosts? %v)!", c.Name, forGhosts)
+			log.Println(fmt.Sprintf("Verfolge jetzt \"%s\" Voice Channel für Automute (für Geister? %v)!", c.Name, forGhosts))
+			return fmt.Sprintf("Verfolge jetzt \"%s\" Voice Channel für Automute (für Geister? %v)", c.Name, forGhosts)
 		}
 	}
-	return fmt.Sprintf("No channel found by the name %s!\n", channelName)
+	return fmt.Sprintf("Kein Kanal mit dem Namen gefunden: %s!\n", channelName)
 }
 
 func (guild *GuildState) linkPlayerResponse(s *discordgo.Session, GuildID string, args []string) {
@@ -52,12 +52,12 @@ func (guild *GuildState) linkPlayerResponse(s *discordgo.Session, GuildID string
 
 	userID := getMemberFromString(s, GuildID, args[0])
 	if userID == "" {
-		log.Printf("Sorry, I don't know who `%s` is. You can pass in ID, username, username#XXXX, nickname or @mention", args[0])
+		log.Printf("Sorry, ich weiß nicht, wer `%s` ist. Du kannst die ID, den Nutzernamen, username#XXXX, den Nickanem eingeben oder @erwähnen", args[0])
 	}
 
 	_, added := guild.checkCacheAndAddUser(g, s, userID)
 	if !added {
-		log.Println("No users found in Discord for userID " + userID)
+		log.Println("Keine Nutzer im Discord gefunden mit userID " + userID)
 	}
 
 	combinedArgs := strings.ToLower(strings.Join(args[1:], ""))
@@ -67,9 +67,9 @@ func (guild *GuildState) linkPlayerResponse(s *discordgo.Session, GuildID string
 		if playerData != nil {
 			found := guild.UserData.UpdatePlayerData(userID, playerData)
 			if found {
-				log.Printf("Successfully linked %s to a color\n", userID)
+				log.Printf("%s wurde erfolgreich mit einer Farbe verknüpft\n", userID)
 			} else {
-				log.Printf("No player was found with id %s\n", userID)
+				log.Printf("Es wurde kein Spieler mit der ID %s gefunden\n", userID)
 			}
 		}
 		return
@@ -78,9 +78,9 @@ func (guild *GuildState) linkPlayerResponse(s *discordgo.Session, GuildID string
 		if playerData != nil {
 			found := guild.UserData.UpdatePlayerData(userID, playerData)
 			if found {
-				log.Printf("Successfully linked %s by name\n", userID)
+				log.Printf("%s erfolgreich mit Namen verknüpft\n", userID)
 			} else {
-				log.Printf("No player was found with id %s\n", userID)
+				log.Printf("Es wurde kein Spieler gefunden mit ID %s\n", userID)
 			}
 		}
 	}
@@ -112,12 +112,12 @@ func lobbyMetaEmbedFields(tracking *Tracking, room, region string, playerCount i
 		Inline: true,
 	}
 	gameInfoFields[2] = &discordgo.MessageEmbedField{
-		Name:   "Tracking",
+		Name:   "Verfolgung",
 		Value:  str,
 		Inline: true,
 	}
 	gameInfoFields[3] = &discordgo.MessageEmbedField{
-		Name:   "Players Linked",
+		Name:   "Spieler verbunden",
 		Value:  fmt.Sprintf("%v/%v", linkedPlayers, playerCount),
 		Inline: false,
 	}
@@ -144,7 +144,7 @@ func menuMessage(g *GuildState) *discordgo.MessageEmbed {
 		desc = g.makeDescription()
 		color = 3066993
 	} else {
-		desc = fmt.Sprintf("%s**No capture linked! Click the link in your DMs to connect!**%s", alarmFormatted, alarmFormatted)
+		desc = fmt.Sprintf("%s**Kein Capture verlinkt! Klicke auf den Link in den DMs, um eine Verbindung herzustellen!**%s", alarmFormatted, alarmFormatted)
 	}
 
 	msg := discordgo.MessageEmbed{
@@ -187,7 +187,7 @@ func lobbyMessage(g *GuildState) *discordgo.MessageEmbed {
 		desc = g.makeDescription()
 		color = 3066993
 	} else {
-		desc = fmt.Sprintf("%s**No capture linked! Click the link in your DMs to connect!**%s", alarmFormatted, alarmFormatted)
+		desc = fmt.Sprintf("%s**Kein Capture verlinkt! Klicke auf den Link in den DMs, um eine Verbindung herzustellen!**%s", alarmFormatted, alarmFormatted)
 	}
 
 	msg := discordgo.MessageEmbed{
@@ -197,7 +197,7 @@ func lobbyMessage(g *GuildState) *discordgo.MessageEmbed {
 		Description: desc,
 		Timestamp:   "",
 		Footer: &discordgo.MessageEmbedFooter{
-			Text:         "React to this message with your in-game color! (or ❌ to leave)",
+			Text:         "Reagiere auf diese Nachricht mit deiner Farbe im Spiel! (oder ❌ um zu verlassen)",
 			IconURL:      "",
 			ProxyIconURL: "",
 		},
@@ -255,22 +255,22 @@ func gamePlayMessage(guild *GuildState) *discordgo.MessageEmbed {
 func (guild *GuildState) makeDescription() string {
 	buf := bytes.NewBuffer([]byte{})
 	if !guild.GameRunning {
-		buf.WriteString("\n**Bot is Paused! Unpause with `" + guild.PersistentGuildData.CommandPrefix + " p`!**\n\n")
+		buf.WriteString("\n**Bot ist angehalten! Stoppe die Pause mit `" + guild.PersistentGuildData.CommandPrefix + " p`!**\n\n")
 	}
 
 	author := guild.GameStateMsg.leaderID
 	if author != "" {
-		buf.WriteString("<@" + author + "> is running an Among Us game!\nThe game is happening in ")
+		buf.WriteString("<@" + author + "> führt ein Among Us Spiel aus!\nTDas Spiel findet statt in ")
 	}
 
 	if len(guild.Tracking.tracking) == 0 {
-		buf.WriteString("any voice channel!")
+		buf.WriteString("jedem Sprachkanal!")
 	} else {
 		t, err := guild.Tracking.FindAnyTrackedChannel(false)
 		if err != nil {
-			buf.WriteString("an invalid voice channel!")
+			buf.WriteString("einem ungültiger Sprachkanal!")
 		} else {
-			buf.WriteString("the **" + t.channelName + "** voice channel!")
+			buf.WriteString("dem **" + t.channelName + "** Sprachkanal!")
 		}
 	}
 
@@ -285,7 +285,7 @@ func extractUserIDFromMention(mention string) (string, error) {
 	} else if strings.HasPrefix(mention, "<@") && strings.HasSuffix(mention, ">") {
 		return mention[2 : len(mention)-1], nil
 	} else {
-		return "", errors.New("mention does not conform to the correct format")
+		return "", errors.New("Erwähnung entspricht nicht dem richtigen Format")
 	}
 }
 
@@ -294,6 +294,6 @@ func extractRoleIDFromMention(mention string) (string, error) {
 	if strings.HasPrefix(mention, "<@&") && strings.HasSuffix(mention, ">") {
 		return mention[3 : len(mention)-1], nil
 	} else {
-		return "", errors.New("mention does not conform to the correct format")
+		return "", errors.New("Erwähnung entspricht nicht dem richtigen Format")
 	}
 }

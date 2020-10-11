@@ -191,9 +191,9 @@ func (guild *GuildState) handleTrackedMembers(sm *SessionManager, delay int, han
 
 		} else if userData.IsLinked() {
 			if shouldMute {
-				log.Printf("Not muting %s because they're already muted\n", userData.GetUserName())
+				log.Printf("%s wird nicht stummgeschaltet, da er/sie bereits stummgeschaltet ist\n", userData.GetUserName())
 			} else {
-				log.Printf("Not unmuting %s because they're already unmuted\n", userData.GetUserName())
+				log.Printf("%s nicht stummschalten, da er/sie bereits nicht stummgeschaltet ist\n", userData.GetUserName())
 			}
 		}
 	}
@@ -201,7 +201,7 @@ func (guild *GuildState) handleTrackedMembers(sm *SessionManager, delay int, han
 	waitForHigherPriority := false
 
 	if delay > 0 {
-		log.Printf("Sleeping for %d seconds before applying changes to users\n", delay)
+		log.Printf("%d Sekunden schlafen, bevor Änderungen an Benutzern vorgenommen werden\n", delay)
 		time.Sleep(time.Second * time.Duration(delay))
 	}
 
@@ -210,7 +210,7 @@ func (guild *GuildState) handleTrackedMembers(sm *SessionManager, delay int, han
 
 		if p.priority > 0 {
 			waitForHigherPriority = true
-			log.Printf("User %s has higher priority: %d\n", p.patchParams.Userdata.GetID(), p.priority)
+			log.Printf("Benutzer/in %s hat eine höhere Priorität: %d\n", p.patchParams.Userdata.GetID(), p.priority)
 		} else if waitForHigherPriority {
 			//wait for all the other users to get muted/unmuted completely, first
 			//log.Println("Waiting for high priority user changes first")
@@ -335,19 +335,19 @@ func (bot *Bot) handleReactionGameStartAdd(guild *GuildState, s *discordgo.Sessi
 			for color, e := range guild.StatusEmojis[true] {
 				if e.ID == m.Emoji.ID {
 					idMatched = true
-					log.Printf("Player %s reacted with color %s", m.UserID, game.GetColorStringForInt(color))
+					log.Printf("Spieler/in %s reagierte mit Farbe %s", m.UserID, game.GetColorStringForInt(color))
 					//the user doesn't exist in our userdata cache; add them
 
 					_, added := guild.checkCacheAndAddUser(g, s, m.UserID)
 					if !added {
-						log.Println("No users found in Discord for userID " + m.UserID)
+						log.Println("Keine Benutzer in Discord gefunden mit der userID " + m.UserID)
 					}
 
 					playerData := guild.AmongUsData.GetByColor(game.GetColorStringForInt(color))
 					if playerData != nil {
 						guild.UserData.UpdatePlayerData(m.UserID, playerData)
 					} else {
-						log.Println("I couldn't find any player data for that color; is your capture linked?")
+						log.Println("Ich konnte keine Spielerdaten für diese Farbe finden. Ist die Erfassung verknüpft?")
 					}
 
 					//then remove the player's reaction if we matched, or if we didn't
@@ -361,7 +361,7 @@ func (bot *Bot) handleReactionGameStartAdd(guild *GuildState, s *discordgo.Sessi
 			if !idMatched {
 				//log.Println(m.Emoji.Name)
 				if m.Emoji.Name == "❌" {
-					log.Printf("Removing player %s", m.UserID)
+					log.Printf("Spieler entfernen %s", m.UserID)
 					guild.UserData.ClearPlayerData(m.UserID)
 					err := s.MessageReactionRemove(m.ChannelID, m.MessageID, "❌", m.UserID)
 					if err != nil {

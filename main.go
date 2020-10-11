@@ -26,9 +26,9 @@ const DefaultURL = "http://localhost"
 func main() {
 	err := discordMainWrapper()
 	if err != nil {
-		log.Println("Program exited with the following error:")
+		log.Println("Programm mit folgendem Fehler beendet:")
 		log.Println(err)
-		log.Println("This window will automatically terminate in 10 seconds")
+		log.Println("Dieses Fenster wird automatisch in 10 Sekunden beendet")
 		time.Sleep(10 * time.Second)
 		return
 	}
@@ -39,10 +39,10 @@ func discordMainWrapper() error {
 	if err != nil {
 		err = godotenv.Load("final.txt")
 		if err != nil {
-			log.Println("Can't open config file, hopefully you're running in docker and have provided the DISCORD_BOT_TOKEN...")
+			log.Println("Konfigurationsdatei kann nicht geöffnet werden, hoffentlich läuft Programm im Docker und  DISCORD_BOT_TOKEN wurde bereitgestellt...")
 			f, err := os.Create("config.txt")
 			if err != nil {
-				log.Println("Issue creating sample config.txt")
+				log.Println("Problem beim Erstellen der Beispielkonfiguration config.txt")
 				return err
 			}
 			_, err = f.WriteString("DISCORD_BOT_TOKEN = \n")
@@ -66,12 +66,12 @@ func discordMainWrapper() error {
 
 	discordToken := os.Getenv("DISCORD_BOT_TOKEN")
 	if discordToken == "" {
-		return errors.New("no DISCORD_BOT_TOKEN provided")
+		return errors.New("kein DISCORD_BOT_TOKEN bereitgestellt")
 	}
 
 	discordToken2 := os.Getenv("DISCORD_BOT_TOKEN_2")
 	if discordToken2 != "" {
-		log.Println("You provided a 2nd Discord Bot Token, so I'll try to use it")
+		log.Println("Sie haben einen 2. Discord Bot Token bereitgestellt, daher werde ich versuchen, ihn zu verwenden")
 	}
 
 	numShardsStr := os.Getenv("NUM_SHARDS")
@@ -86,36 +86,36 @@ func discordMainWrapper() error {
 		num, err := strconv.Atoi(tempPort)
 
 		if err != nil || num < 1024 || num > 65535 {
-			log.Printf("[Info] Invalid or no particular PORT (range [1024-65535]) provided. Defaulting to %s\n", DefaultPort)
+			log.Printf("[Info] Ungültiger oder kein bestimmter PORT (Bereich [1024-65535]) angegeben. Standardmäßig gesetzt auf %s\n", DefaultPort)
 			ports[0] = DefaultPort
 		}
 	} else if len(portStrings) == numShards {
 		for i := 0; i < numShards; i++ {
 			num, err := strconv.Atoi(portStrings[i])
 			if err != nil || num < 0 || num > 65535 {
-				return errors.New("invalid or no particular PORT (range [0-65535]) provided")
+				return errors.New("ungültiger oder kein bestimmter PORT (Bereich [0-65535]) provided")
 			}
 			ports[i] = portStrings[i]
 		}
 	} else {
-		return errors.New("the number of shards does not match the number of ports provided")
+		return errors.New("Die Anzahl der Shards stimmt nicht mit der Anzahl der bereitgestellten Ports überein")
 	}
 
 	url := os.Getenv("SERVER_URL")
 	if url == "" {
-		log.Printf("[Info] No valid SERVER_URL provided. Defaulting to %s\n", DefaultURL)
+		log.Printf("[Info] Keine gültige SERVER_URL angegeben. Standardmäßig gesetzt auf %s\n", DefaultURL)
 		url = DefaultURL
 	}
 
 	extPort := os.Getenv("EXT_PORT")
 	if extPort == "" {
-		log.Print("[Info] No EXT_PORT provided. Defaulting to PORT\n")
+		log.Print("[Info] Kein EXT_PORT bereitgestellt. Standardmäßig gesetzt auf PORT\n")
 	} else if extPort == "protocol" {
-		log.Print("[Info] EXT_PORT set to protocol. Not adding port to url\n")
+		log.Print("[Info] EXT_PORT auf Protokoll gesetzt. Der URL wird kein Port hinzugefügt\n")
 	} else {
 		num, err := strconv.Atoi(extPort)
 		if err != nil || num > 65535 || (num < 1024 && num != 80 && num != 443) {
-			return errors.New("invalid EXT_PORT (range [1024-65535]) provided")
+			return errors.New("ungültiger EXT_PORT (Bereich [1024-65535]) bereitgestellt")
 		}
 	}
 
@@ -125,14 +125,14 @@ func discordMainWrapper() error {
 	authPath := os.Getenv("GOOGLE_APPLICATION_CREDENTIALS")
 	projectID := os.Getenv("FIRESTORE_PROJECT_ID")
 	if authPath != "" && projectID != "" {
-		log.Println("GOOGLE_APPLICATION_CREDENTIALS variable is set; attempting to use Firestore as the Storage Driver")
+		log.Println("Die Variable GOOGLE_APPLICATION_CREDENTIALS wird gesetzt. Versuch, Firestore als Speichertreiber zu verwenden")
 		storageClient = &storage.FirestoreDriver{}
 		err = storageClient.Init(projectID)
 		if err != nil {
-			log.Printf("Failed to create Firestore client with error: %s", err)
+			log.Printf("Fehler beim Erstellen des Firestore-Clients mit Fehler: %s", err)
 		} else {
 			dbSuccess = true
-			log.Println("Success in initializing Firestore client as the Storage Driver")
+			log.Println("Erfolgreiche Initialisierung des Firestore-Clients als Speichertreiber")
 		}
 	}
 
@@ -142,14 +142,14 @@ func discordMainWrapper() error {
 		if configPath == "" {
 			configPath = "./"
 		}
-		log.Printf("Using %s as the base path for config", configPath)
+		log.Printf("Verwenden von %s als Basispfad für die Konfiguration", configPath)
 		err := storageClient.Init(configPath)
 		if err != nil {
-			log.Fatalf("Failed to create Filesystem Storage Driver with error: %s", err)
+			log.Fatalf("Fehler beim Erstellen des Dateisystem-Speichertreibers mit Fehler: %s", err)
 		}
-		log.Println("Success in initializing the local Filesystem as the Storage Driver")
+		log.Println("Erfolgreiche Initialisierung des lokalen Dateisystems als Speichertreiber")
 	}
-	log.Println("Bot is now running.  Press CTRL-C to exit.")
+	log.Println("Bot läuft jetzt. Drücke STRG-C, um den Vorgang zu beenden.")
 	sc := make(chan os.Signal, 1)
 	signal.Notify(sc, syscall.SIGINT, syscall.SIGTERM, os.Interrupt, os.Kill)
 

@@ -71,7 +71,7 @@ func (guild *GuildState) addSpecialEmojis(s *discordgo.Session, guildID string, 
 			if err != nil {
 				log.Println(err)
 			} else {
-				log.Printf("Added emoji %s successfully!\n", emoji.Name)
+				log.Printf("Emoji %s erfolgreich hinzugefügt!\n", emoji.Name)
 				emoji.ID = em.ID
 				guild.SpecialEmojis[em.Name] = emoji
 			}
@@ -96,7 +96,7 @@ func (guild *GuildState) addAllMissingEmojis(s *discordgo.Session, guildID strin
 			if err != nil {
 				log.Println(err)
 			} else {
-				log.Printf("Added emoji %s successfully!\n", emoji.Name)
+				log.Printf("Emoji %s erfolgreich hinzugefügt!\n", emoji.Name)
 				emoji.ID = em.ID
 				guild.StatusEmojis[alive][i] = emoji
 			}

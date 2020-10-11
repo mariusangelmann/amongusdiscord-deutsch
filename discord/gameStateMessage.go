@@ -78,7 +78,7 @@ func (gsm *GameStateMessage) Edit(s *discordgo.Session, me *discordgo.MessageEmb
 }
 
 func (gsm *GameStateMessage) EditWorker(s *discordgo.Session, delay int) {
-	log.Printf("Waiting %d secs to update the status message to not be rate-limited", delay)
+	log.Printf("Warte %d Sekunden, um die Statusmeldung so zu aktualisieren, dass sie nicht auf die Rate beschränkt ist", delay)
 	time.Sleep(time.Duration(delay) * time.Second)
 
 	gsm.lock.Lock()

@@ -46,7 +46,7 @@ func (tracking *Tracking) ToStatusString() string {
 	defer tracking.lock.RUnlock()
 
 	if len(tracking.tracking) == 0 {
-		return "Any Voice Channel"
+		return "Beliebiger Sprachkanal"
 	}
 
 	buf := bytes.NewBuffer([]byte{})
@@ -79,7 +79,7 @@ func (tracking *Tracking) FindAnyTrackedChannel(forGhosts bool) (TrackingChannel
 			return v, nil
 		}
 	}
-	return TrackingChannel{}, fmt.Errorf("No voice channel found forGhosts: %v", forGhosts)
+	return TrackingChannel{}, fmt.Errorf("Für Ghosts wurde kein Sprachkanal gefunden: %v", forGhosts)
 }
 
 func (tracking *Tracking) AddTrackedChannel(id, name string, forGhosts bool) {

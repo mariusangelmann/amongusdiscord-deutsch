@@ -1,6 +1,6 @@
 {
-    "name": "AmongUsAutoMute (BETA)",
-    "description": "Discord Bot to scrape Among Us on-screen data, and automatically mute/unmute players during the course of the game!",
+    "name": "AmongUsAutoMute - auf Deutsch (BETA)",
+    "description": "Discord Bot, um Among Us Bildschirmdaten zu kratzen und Spieler im Laufe des Spiels automatisch stummzuschalten / die Stummschaltung aufzuheben!",
     "repository": "https://github.com/denverquane/amongusdiscord",
     "logo": "https://github.com/denverquane/amongusdiscord/raw/master/assets/botProfilePicture.jpg",
     "keywords": ["go", "among us", "discord"]

@@ -44,7 +44,7 @@ func guildMemberUpdate(s *discordgo.Session, params UserPatchParameters) {
 
 		_, err := s.RequestWithBucketID("PATCH", discordgo.EndpointGuildMember(params.GuildID, params.Userdata.GetID()), newParams, discordgo.EndpointGuildMember(params.GuildID, ""))
 		if err != nil {
-			log.Println("Failed to change nickname for user: move the bot up in your Roles")
+			log.Println("Fehler beim Ändern des Spitznamens für den Benutzer: Verschiebe den Bot in den Rollen nach oben")
 			log.Println(err)
 			guildMemberUpdateNoNick(s, params)
 		}
@@ -99,11 +99,11 @@ func getPhaseFromString(input string) game.Phase {
 // GetRoomAndRegionFromArgs does what it sounds like
 func getRoomAndRegionFromArgs(args []string) (string, string) {
 	if len(args) == 0 {
-		return "Unprovided", "Unprovided"
+		return "Nicht vorgesehen", "Nicht vorgesehen"
 	}
 	room := strings.ToUpper(args[0])
 	if len(args) == 1 {
-		return room, "Unprovided"
+		return room, "Nicht vorgesehen"
 	}
 	region := strings.ToLower(args[1])
 	switch region {

@@ -130,7 +130,7 @@ func (uds *UserDataSet) GetUser(userID string) (game.UserData, error) {
 	if v, ok := uds.userDataSet[userID]; ok {
 		return v, nil
 	}
-	return game.UserData{}, errors.New(fmt.Sprintf("No user found with ID %s", userID))
+	return game.UserData{}, errors.New(fmt.Sprintf("Kein Benutzer gefunden mit der ID %s", userID))
 }
 
 func (uds *UserDataSet) ToEmojiEmbedFields(nameColorMap map[string]int, nameAliveMap map[string]bool, emojis AlivenessEmojis) []*discordgo.MessageEmbedField {

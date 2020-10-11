@@ -57,7 +57,7 @@ func (fs *FilesystemDriver) GetGuildData(guildID string) (map[string]interface{}
 			}
 		}
 	}
-	return map[string]interface{}{}, errors.New("no config json found")
+	return map[string]interface{}{}, errors.New("Keine Konfiguration (config.json) gefunden")
 }
 
 func (fs *FilesystemDriver) WriteGuildData(guildID string, data map[string]interface{}) error {
